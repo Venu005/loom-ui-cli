@@ -36,14 +36,15 @@ export async function findTargetFile(
         }
       }
     }
+
     return null;
   }
+
   return searchDirectory(startDir);
 }
-
 export async function addLoomuiToConfig(configPath: string) {
   try {
-    const filePath = path.resolve(configPath, "components.json");
+    const filePath = path.resolve(configPath, "component.json");
     const fileContent = await fs.readFile(filePath, "utf-8");
     const configData = JSON.parse(fileContent);
     configData["loomui"] = true;

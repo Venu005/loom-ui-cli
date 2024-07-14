@@ -67,7 +67,7 @@ export async function getConfig(cwd: string) {
   if (!config) {
     throw new Error("No configuration found.");
   }
-  return;
+  return await resolveConfigPaths(cwd, config);
 }
 
 export async function resolveConfigPaths(cwd: string, config: RawConfig) {
