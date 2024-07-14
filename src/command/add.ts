@@ -3,7 +3,7 @@ import { initializing } from "../utils/initializing.js";
 import { installPackages } from "../utils/packageInstaller.js";
 import { writeFilesWithLinks } from "../utils/function.js";
 import { logger } from "../utils/logger.js";
-import { componentData } from "../utils/data.js";
+import { componentsData } from "../utils/data.js";
 
 export const DEFAULT_STYLE = "default";
 export const DEFAULT_COMPONENTS = "@/components";
@@ -26,7 +26,7 @@ export const add = new Command()
       await initializing("add");
 
       components.map(async (itm: any) => {
-        const isMatch = componentData.find((cmd) => itm === cmd.command);
+        const isMatch = componentsData.find((cmd) => itm === cmd.command);
         if (isMatch) {
           if (isMatch.packages !== null) {
             installPackages(isMatch.packages)

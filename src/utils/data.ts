@@ -1,5 +1,5 @@
 //components data
-export const componentData = [
+export const componentsData = [
   {
     command: "button",
     packages: null,

@@ -6,15 +6,10 @@ import {
   type ConfigLoaderSuccessResult,
 } from "tsconfig-paths";
 import { cosmiconfig } from "cosmiconfig";
-//Pick is a utility type in TypeScript that constructs a new type by picking the set of properties K from T. Pick<T,K>
-
-//* chore: it is to import the components.json and then resolve thte paths in config.json
-
 export async function resolveImport(
   importPath: string,
   config: Pick<ConfigLoaderSuccessResult, "absoluteBaseUrl" | "paths">
 ) {
-  //createMatchPath returns other fucntion()()
   return createMatchPath(config.absoluteBaseUrl, config.paths)(
     importPath,
     undefined,
@@ -22,11 +17,9 @@ export async function resolveImport(
     [".ts", ".tsx"]
   );
 }
-
 const explorer = cosmiconfig("components", {
   searchPlaces: ["components.json"],
 });
-
 export const rawConfigSchema = z
   .object({
     $schema: z.string().optional(),
@@ -47,7 +40,7 @@ export const rawConfigSchema = z
     }),
   })
   .strict();
-//* exporting raw config as type
+
 export type RawConfig = z.infer<typeof rawConfigSchema>;
 
 export const configSchema = rawConfigSchema.extend({
@@ -64,15 +57,18 @@ export type Config = z.infer<typeof configSchema>;
 
 export async function getConfig(cwd: string) {
   const config = await getRawConfig(cwd);
+
   if (!config) {
-    throw new Error("No configuration found.");
+    return null;
   }
+
   return await resolveConfigPaths(cwd, config);
 }
 
 export async function resolveConfigPaths(cwd: string, config: RawConfig) {
-  //load config
+  // Read tsconfig.json.
   const tsConfig = await loadConfig(cwd);
+
   if (tsConfig.resultType === "failed") {
     throw new Error(
       `Failed to load ${config.tsx ? "tsconfig" : "jsconfig"}.json. ${
@@ -80,9 +76,10 @@ export async function resolveConfigPaths(cwd: string, config: RawConfig) {
       }`.trim()
     );
   }
+
   return configSchema.parse({
     ...config,
-    resovedPaths: {
+    resolvedPaths: {
       tailwindConfig: path.resolve(cwd, config.tailwind.config),
       tailwindCss: path.resolve(cwd, config.tailwind.css),
       utils: await resolveImport(config.aliases["utils"], tsConfig),
@@ -97,9 +94,11 @@ export async function resolveConfigPaths(cwd: string, config: RawConfig) {
 export async function getRawConfig(cwd: string): Promise<RawConfig | null> {
   try {
     const configResult = await explorer.search(cwd);
+
     if (!configResult) {
       return null;
     }
+
     return rawConfigSchema.parse(configResult.config);
   } catch (error) {
     throw new Error(`Invalid configuration found in ${cwd}/components.json.`);

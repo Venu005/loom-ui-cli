@@ -26,5 +26,7 @@ export const initializing = async (type: string) => {
     } else {
       spinner.stop();
     }
+  } else {
+    spinner.fail(chalk.red(`Failed installing components`));
   }
 };

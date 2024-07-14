@@ -11,8 +11,8 @@ import path from "path";
 import prompts from "prompts";
 import * as https from "https";
 import ora from "ora";
-export const UIFOLDERPATH = "./components/ui";
-export const UIFOLDER = "ui";
+export const UIFOLDERPATH = "./components/loomui";
+export const UIFOLDER = "loomui";
 export const COMPONENTSFILE = "components.json";
 
 //finding the path of target file
@@ -44,18 +44,28 @@ export async function findTargetFile(
 }
 export async function addLoomuiToConfig(configPath: string) {
   try {
+    // Read the existing component.json file
     const filePath = path.resolve(configPath, "component.json");
     const fileContent = await fs.readFile(filePath, "utf-8");
+
+    // Parse the JSON content
     const configData = JSON.parse(fileContent);
+
+    // Add the new key-value pair
     configData["loomui"] = true;
+
+    // Convert the updated data back to JSON
     const updatedContent = JSON.stringify(configData, null, 2);
+
+    // Write the updated JSON back to the component.json file
     await fs.writeFile(filePath, updatedContent, "utf-8");
+
     console.log("Updated component.json successfully.");
   } catch (error) {
-    console.error("Error updating component.json", error);
+    console.error("Error updating component.json:", error);
   }
 }
-// writing files to see if the component is already present and if we can use it
+
 async function checkAndWriteFile(
   action: any,
   url: any,
@@ -130,9 +140,9 @@ export async function writeFilesWithLinks(payloads: Array<any>) {
   }
 }
 
-// get the component
 export function getWriteComponentPath(component: string) {
   const path = "./src";
+
   if (existsSync(path)) {
     return `./src/components/${UIFOLDER}/` + component + ".tsx";
   } else {
@@ -140,15 +150,16 @@ export function getWriteComponentPath(component: string) {
   }
 }
 
-//setting up loom ui if not installed before hand
-
 export function setupLoomuiFolder() {
   const srcPath = `./src/components/${UIFOLDER}`;
   const rootPath = `./components/${UIFOLDER}`;
+
   if (!existsSync(srcPath) && !existsSync(rootPath)) {
     if (existsSync("./src/components")) {
       mkdirSync(srcPath, { recursive: true });
-      console.log(chalk.green(`Created './src/components/${UIFOLDER}' ...`));
+      console.log(
+        chalk.green.bold(`Created './src/components/${UIFOLDER}' ...`)
+      );
     } else if (existsSync("./components")) {
       mkdirSync(rootPath, { recursive: true });
       console.log(chalk.green.bold(`Created './components/${UIFOLDER}' ...`));
