@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { initializing } from "../utils/initializing.js";
 import { installPackages } from "../utils/packageInstaller.js";
-import { writeFiles } from "../utils/function.js";
+import { writeFilesWithLinks } from "../utils/function.js";
 import { logger } from "../utils/logger.js";
 import { componentData } from "../utils/data.js";
 
@@ -14,32 +14,37 @@ export const DEFAULT_TAILWIND_BASE_COLOR = "slate";
 
 export const add = new Command()
   .name("add")
-  .description("Add components to your react apps")
+  .description("Add components to you nextjs app")
   .argument("[components...]", "To add components")
+
   .option("-o, --overwrite", "To overwrite existing files.", false)
+
   .option("-a, --all", "add all available components", false)
+
   .action(async (components, opts) => {
     try {
       await initializing("add");
+
       components.map(async (itm: any) => {
         const isMatch = componentData.find((cmd) => itm === cmd.command);
         if (isMatch) {
           if (isMatch.packages !== null) {
             installPackages(isMatch.packages)
-              .then(() => writeFiles(isMatch.files))
+              .then(() => {
+                writeFilesWithLinks(isMatch.files);
+              })
               .catch((err) => {
                 console.error(
-                  "An error occured during package installation: ",
+                  "An error occurred during package installation:",
                   err
                 );
               });
           } else {
-            writeFiles(isMatch.files);
+            writeFilesWithLinks(isMatch.files);
           }
-        } else {
-          return logger.error(`Unknown component: ${itm}`);
-        }
+        } else return logger.error(`Unknown component: ${itm}`);
       });
+      // console.log(found, components);
     } catch (error) {
       console.log(error);
     }

@@ -55,7 +55,7 @@ export async function addLoomuiToConfig(configPath: string) {
   }
 }
 // writing files to see if the component is already present and if we can use it
-async function checkandWriteFile(
+async function checkAndWriteFile(
   action: any,
   url: any,
   path: any,
@@ -67,52 +67,59 @@ async function checkandWriteFile(
     const response = await prompts({
       type: "toggle",
       name: "overwrite",
-      message: `File ${name} already exists.Are you sure? You want to overwrite it?`,
+      message: `File ${name} already exists. Are you sure to overwrite it?`,
       initial: true,
       active: "yes",
       inactive: "no",
     });
+
     if (!response.overwrite) {
       spinner.info(chalk.cyan(`Skipped creating ${name}`));
       return;
     }
     spinner.start();
   }
+
   https
-    .get(url, (res) => {
+    .get(url, (response) => {
       let data = "";
-      res.on("data", (chunk) => {
+
+      response.on("data", (chunk) => {
         data += chunk;
       });
-      res.on("end", () => {
+
+      response.on("end", () => {
         writeFile(path, data, (err) => {
           if (err) {
-            spinner.fail(chalk.red(`Falied to create ${action}`));
+            spinner.fail(chalk.red(`Fail to create ${action}`));
           } else {
-            spinner.succeed(chalk.green(`File created ${name}`));
+            spinner.succeed(chalk.green(`File created ${name}.`));
           }
         });
       });
     })
     .on("error", (err) => {
-      console.error(chalk.red(`Failed to create ${action}`, err));
+      console.error(chalk.red(`Fail to create ${action}`, err));
     });
 }
 
-export async function writeFiles(payloads: Array<any>) {
+export async function writeFilesWithLinks(payloads: Array<any>) {
   for (const payload of payloads) {
     const { step, name, link, type } = payload;
-    const action = `Creating ${name}${type}`;
+    const action = ` Creating ${name}${type}`;
     const path = getWriteComponentPath(payload.name);
+
     if (link) {
       const spinner = ora(chalk.cyan(action) as any).start();
-      await checkandWriteFile(action, link, path, spinner, payload.name);
+      await checkAndWriteFile(action, link, path, spinner, payload.name);
     } else {
       const spinner = ora(chalk.cyan(action)).start();
       const filePath = await findTargetFile(payload.write.fileName);
       if (filePath) {
-        await appendFileSync(filePath as string, payload.write.data, "utf-8");
-        spinner.succeed(chalk.green(`Data added to ${payload.write.fileName}`));
+        await appendFileSync(filePath as string, payload.write.data, "utf8");
+        spinner.succeed(
+          chalk.green(`Data added to ${payload.write.fileName}.`)
+        );
       } else {
         spinner.fail(
           chalk.green(`No File Found name ${payload.write.fileName}.`)
@@ -126,9 +133,9 @@ export async function writeFiles(payloads: Array<any>) {
 export function getWriteComponentPath(component: string) {
   const path = "./src";
   if (existsSync(path)) {
-    return `./src/components/${UIFOLDER}` + component + ".tsx";
+    return `./src/components/${UIFOLDER}/` + component + ".tsx";
   } else {
-    return `./components/${UIFOLDER}` + component + ".tsx";
+    return `./components/${UIFOLDER}/` + component + ".tsx";
   }
 }
 

@@ -2,8 +2,8 @@
 
 import { Command } from "commander";
 import { getPackageInfo } from "./utils/get-package-info.js";
-import { init } from "./commands/init.js";
-import { add } from "./commands/add.js";
+import { init } from "./command/init.js";
+import { add } from "./command/add.js";
 
 async function main() {
   const packageInfo = await getPackageInfo();
