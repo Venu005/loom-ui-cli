@@ -4,13 +4,17 @@
   "description": "Add components to your apps with CLI",
   "main": "index.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Venu005/loom-ui-cli"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w"
   },
   "bin": "./dist/index.js",
   "author": "Venusai",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/cross-spawn": "^6.0.6",
     "@types/fs-extra": "^11.0.4",
