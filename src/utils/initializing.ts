@@ -11,6 +11,7 @@ import ora from "ora";
 import { existsSync } from "fs";
 import { promises as fs } from "fs";
 import { mkdirSync } from "fs";
+
 function setupLibUtilsFolder() {
   const srcPath = "./src/lib/utils";
   const rootPath = "./lib/utils";
@@ -30,6 +31,7 @@ function setupLibUtilsFolder() {
     }
   }
 }
+
 export const initializing = async (type: string) => {
   const spinner = ora(chalk.cyan("initializing...")).start();
   const componentFile = await findTargetFile(COMPONENTSFILE);
