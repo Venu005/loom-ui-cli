@@ -2,7 +2,7 @@
 export const componentsData = [
   {
     command: "button",
-    packages: [],
+    packages: ["class-variance-authority", "@radix-ui/react-slot"],
     files: [
       {
         step: 0,
