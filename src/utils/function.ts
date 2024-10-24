@@ -154,8 +154,8 @@ export function getWriteComponentPath(component: string) {
 export function setupLoomuiFolder() {
   const srcPath = `./src/components/${UIFOLDER}`;
   const rootPath = `./components/${UIFOLDER}`;
-  const libPath = "./src/lib";
-  const utilsFilePath = `${libPath}/utils.ts`;
+  const libPath = path.join("src", "lib");
+  const utilsFilePath = path.join(libPath, "utils.ts");
 
   // Create src/components or components directory
   if (!existsSync("./src/components") && !existsSync("./components")) {
