@@ -12,6 +12,8 @@ import path from "path";
 import prompts from "prompts";
 import * as https from "https";
 import ora from "ora";
+import { execSync } from "child_process";
+
 export const UIFOLDERPATH = "./components/loomui";
 export const UIFOLDER = "loomui";
 export const COMPONENTSFILE = "components.json";
@@ -190,4 +192,13 @@ export function cn(...inputs: ClassValue[]) {
 
   writeFileSync(utilsFilePath, utilsContent);
   console.log(chalk.green.bold(`Created '${utilsFilePath}' file`));
+
+  // Install tailwind-merge
+  try {
+    console.log(chalk.cyan("Installing tailwind-merge..."));
+    execSync("npm install tailwind-merge", { stdio: "inherit" });
+    console.log(chalk.green.bold("Successfully installed tailwind-merge"));
+  } catch (error) {
+    console.error(chalk.red("Failed to install tailwind-merge:"), error);
+  }
 }
