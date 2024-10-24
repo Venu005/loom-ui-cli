@@ -62,7 +62,7 @@ export const initializing = async (type: string) => {
   }
 
   setupLoomuiFolder();
-  setupLibUtilsFolder(); // Add this line to create the lib/utils folder
+  setupLibUtilsFolder();
 
   if (type === "init") {
     spinner.succeed(chalk.green(`Project is initialized.`));
