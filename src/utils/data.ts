@@ -2,7 +2,7 @@
 export const componentsData = [
   {
     command: "button",
-    packages: null,
+    packages: [],
     files: [
       {
         step: 0,

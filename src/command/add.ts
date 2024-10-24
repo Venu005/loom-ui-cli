@@ -25,26 +25,23 @@ export const add = new Command()
     try {
       await initializing("add");
 
-      components.map(async (itm: any) => {
+      const packagesToInstall = new Set<string>();
+
+      for (const itm of components) {
         const isMatch = componentsData.find((cmd) => itm === cmd.command);
         if (isMatch) {
-          if (isMatch.packages !== null) {
-            installPackages(isMatch.packages)
-              .then(() => {
-                writeFilesWithLinks(isMatch.files);
-              })
-              .catch((err) => {
-                console.error(
-                  "An error occurred during package installation:",
-                  err
-                );
-              });
-          } else {
-            writeFilesWithLinks(isMatch.files);
+          if (isMatch.packages && Array.isArray(isMatch.packages)) {
+            isMatch.packages.forEach((pkg) => packagesToInstall.add(pkg));
           }
-        } else return logger.error(`Unknown component: ${itm}`);
-      });
-      // console.log(found, components);
+          await writeFilesWithLinks(isMatch.files);
+        } else {
+          logger.error(`Unknown component: ${itm}`);
+        }
+      }
+
+      if (packagesToInstall.size > 0) {
+        await installPackages(Array.from(packagesToInstall));
+      }
     } catch (error) {
       console.log(error);
     }

@@ -1,6 +1,6 @@
 {
-  "name": "loom-ui",
-  "version": "1.0.0",
+  "name": "@venusai/loom-ui",
+  "version": "1.0.1",
   "description": "Add components to your apps with CLI",
   "main": "index.js",
   "type": "module",
@@ -12,7 +12,9 @@
     "build": "tsc",
     "dev": "tsc -w"
   },
-  "bin": "./dist/index.js",
+  "bin": {
+    "loomui": "./dist/index.js"
+  },
   "author": "Venusai",
   "license": "MIT",
   "devDependencies": {

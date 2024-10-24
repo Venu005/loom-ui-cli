@@ -154,21 +154,18 @@ export function setupLoomuiFolder() {
   const srcPath = `./src/components/${UIFOLDER}`;
   const rootPath = `./components/${UIFOLDER}`;
 
+  if (!existsSync("./src/components") && !existsSync("./components")) {
+    mkdirSync("./src/components", { recursive: true });
+    console.log(chalk.green.bold(`Created './src/components' directory`));
+  }
+
   if (!existsSync(srcPath) && !existsSync(rootPath)) {
     if (existsSync("./src/components")) {
       mkdirSync(srcPath, { recursive: true });
-      console.log(
-        chalk.green.bold(`Created './src/components/${UIFOLDER}' ...`)
-      );
-    } else if (existsSync("./components")) {
-      mkdirSync(rootPath, { recursive: true });
-      console.log(chalk.green.bold(`Created './components/${UIFOLDER}' ...`));
+      console.log(chalk.green.bold(`Created '${srcPath}' directory`));
     } else {
-      console.log(
-        chalk.red.bold(
-          `Neither './src/components' nor './components' directories exist.`
-        )
-      );
+      mkdirSync(rootPath, { recursive: true });
+      console.log(chalk.green.bold(`Created '${rootPath}' directory`));
     }
   }
 }
