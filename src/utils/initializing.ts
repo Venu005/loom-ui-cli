@@ -13,15 +13,18 @@ import { promises as fs } from "fs";
 import { mkdirSync } from "fs";
 
 function setupLibUtilsFolder() {
+  console.log(chalk.blue("Inside setupLibUtilsFolder function"));
   const srcPath = "./src/lib/utils";
   const rootPath = "./lib/utils";
 
   if (!existsSync("./src/lib") && !existsSync("./lib")) {
+    console.log(chalk.yellow("Creating ./src/lib directory..."));
     mkdirSync("./src/lib", { recursive: true });
     console.log(chalk.green.bold(`Created './src/lib' directory`));
   }
 
   if (!existsSync(srcPath) && !existsSync(rootPath)) {
+    console.log(chalk.yellow(`Creating ${srcPath} directory...`));
     if (existsSync("./src/lib")) {
       mkdirSync(srcPath, { recursive: true });
       console.log(chalk.green.bold(`Created '${srcPath}' directory`));
@@ -29,16 +32,20 @@ function setupLibUtilsFolder() {
       mkdirSync(rootPath, { recursive: true });
       console.log(chalk.green.bold(`Created '${rootPath}' directory`));
     }
+  } else {
+    console.log(chalk.green(`${srcPath} or ${rootPath} already exists.`));
   }
 }
-
 export const initializing = async (type: string) => {
   const spinner = ora(chalk.cyan("initializing...")).start();
+  console.log(chalk.blue("Starting initialization..."));
+
   const componentFile = await findTargetFile(COMPONENTSFILE);
   const srcPath = `./src/components/${UIFOLDER}`;
   const rootPath = `./components/${UIFOLDER}`;
 
   if (!componentFile) {
+    console.log(chalk.yellow("components.json not found, creating it..."));
     // Create components.json if it doesn't exist
     const defaultConfig = {
       style: "default",
@@ -61,7 +68,10 @@ export const initializing = async (type: string) => {
     logger.success("Created components.json with default configuration.");
   }
 
+  console.log(chalk.blue("Setting up Loomui folder..."));
   setupLoomuiFolder();
+
+  console.log(chalk.blue("Setting up lib/utils folder..."));
   setupLibUtilsFolder();
 
   if (type === "init") {
@@ -70,4 +80,5 @@ export const initializing = async (type: string) => {
   } else {
     spinner.stop();
   }
+  console.log(chalk.blue("Initialization complete."));
 };

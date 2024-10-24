@@ -25,9 +25,7 @@ export const add = new Command()
   .action(async (components, opts) => {
     try {
       await initializing("add");
-
       const packagesToInstall = new Set<string>();
-
       for (const itm of components) {
         const isMatch = componentsData.find((cmd) => itm === cmd.command);
         if (isMatch) {
@@ -39,7 +37,6 @@ export const add = new Command()
           logger.error(`Unknown component: ${itm}`);
         }
       }
-
       if (packagesToInstall.size > 0) {
         console.log(
           chalk.blue(
