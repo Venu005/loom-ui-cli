@@ -36,6 +36,7 @@ function setupLibUtilsFolder() {
     console.log(chalk.green(`${srcPath} or ${rootPath} already exists.`));
   }
 }
+
 export const initializing = async (type: string) => {
   const spinner = ora(chalk.cyan("initializing...")).start();
   console.log(chalk.blue("Starting initialization..."));
