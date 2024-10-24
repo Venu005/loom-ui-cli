@@ -6,6 +6,7 @@ import {
   promises as fs,
   mkdirSync,
   writeFile,
+  writeFileSync,
 } from "fs";
 import path from "path";
 import prompts from "prompts";
@@ -153,12 +154,16 @@ export function getWriteComponentPath(component: string) {
 export function setupLoomuiFolder() {
   const srcPath = `./src/components/${UIFOLDER}`;
   const rootPath = `./components/${UIFOLDER}`;
+  const libPath = "./src/lib";
+  const utilsFilePath = `${libPath}/utils.ts`;
 
+  // Create src/components or components directory
   if (!existsSync("./src/components") && !existsSync("./components")) {
     mkdirSync("./src/components", { recursive: true });
     console.log(chalk.green.bold(`Created './src/components' directory`));
   }
 
+  // Create loomui folder
   if (!existsSync(srcPath) && !existsSync(rootPath)) {
     if (existsSync("./src/components")) {
       mkdirSync(srcPath, { recursive: true });
@@ -168,4 +173,21 @@ export function setupLoomuiFolder() {
       console.log(chalk.green.bold(`Created '${rootPath}' directory`));
     }
   }
+
+  // Create lib directory and utils.ts file
+  if (!existsSync(libPath)) {
+    mkdirSync(libPath, { recursive: true });
+    console.log(chalk.green.bold(`Created '${libPath}' directory`));
+  }
+
+  const utilsContent = `import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+`;
+
+  writeFileSync(utilsFilePath, utilsContent);
+  console.log(chalk.green.bold(`Created '${utilsFilePath}' file`));
 }
