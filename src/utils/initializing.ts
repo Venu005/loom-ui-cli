@@ -11,7 +11,25 @@ import ora from "ora";
 import { existsSync } from "fs";
 import { promises as fs } from "fs";
 import { mkdirSync } from "fs";
+function setupLibUtilsFolder() {
+  const srcPath = "./src/lib/utils";
+  const rootPath = "./lib/utils";
 
+  if (!existsSync("./src/lib") && !existsSync("./lib")) {
+    mkdirSync("./src/lib", { recursive: true });
+    console.log(chalk.green.bold(`Created './src/lib' directory`));
+  }
+
+  if (!existsSync(srcPath) && !existsSync(rootPath)) {
+    if (existsSync("./src/lib")) {
+      mkdirSync(srcPath, { recursive: true });
+      console.log(chalk.green.bold(`Created '${srcPath}' directory`));
+    } else {
+      mkdirSync(rootPath, { recursive: true });
+      console.log(chalk.green.bold(`Created '${rootPath}' directory`));
+    }
+  }
+}
 export const initializing = async (type: string) => {
   const spinner = ora(chalk.cyan("initializing...")).start();
   const componentFile = await findTargetFile(COMPONENTSFILE);
@@ -51,23 +69,3 @@ export const initializing = async (type: string) => {
     spinner.stop();
   }
 };
-
-function setupLibUtilsFolder() {
-  const srcPath = "./src/lib/utils";
-  const rootPath = "./lib/utils";
-
-  if (!existsSync("./src/lib") && !existsSync("./lib")) {
-    mkdirSync("./src/lib", { recursive: true });
-    console.log(chalk.green.bold(`Created './src/lib' directory`));
-  }
-
-  if (!existsSync(srcPath) && !existsSync(rootPath)) {
-    if (existsSync("./src/lib")) {
-      mkdirSync(srcPath, { recursive: true });
-      console.log(chalk.green.bold(`Created '${srcPath}' directory`));
-    } else {
-      mkdirSync(rootPath, { recursive: true });
-      console.log(chalk.green.bold(`Created '${rootPath}' directory`));
-    }
-  }
-}
