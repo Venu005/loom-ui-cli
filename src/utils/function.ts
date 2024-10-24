@@ -13,6 +13,7 @@ import prompts from "prompts";
 import * as https from "https";
 import ora from "ora";
 import { execSync } from "child_process";
+import { installPackages } from "./packageInstaller.js";
 
 export const UIFOLDERPATH = "./components/loomui";
 export const UIFOLDER = "loomui";
@@ -153,7 +154,7 @@ export function getWriteComponentPath(component: string) {
   }
 }
 
-export function setupLoomuiFolder() {
+export async function setupLoomuiFolder() {
   const srcPath = `./src/components/${UIFOLDER}`;
   const rootPath = `./components/${UIFOLDER}`;
   const libPath = path.join("src", "lib");
@@ -196,20 +197,9 @@ export function cn(...inputs: ClassValue[]) {
   // Install tailwind-merge
   try {
     console.log(chalk.cyan("Installing tailwind-merge..."));
-    const packageManager = getPackageManager();
-    const installCommand = `${packageManager} ${
-      packageManager === "npm" ? "install" : "add"
-    } tailwind-merge`;
-    execSync(installCommand, { stdio: "inherit" });
+    await installPackages(["tailwind-merge"]);
     console.log(chalk.green.bold("Successfully installed tailwind-merge"));
   } catch (error) {
     console.error(chalk.red("Failed to install tailwind-merge:"), error);
   }
-}
-
-function getPackageManager(): string {
-  if (existsSync("pnpm-lock.yaml")) return "pnpm";
-  if (existsSync("bun.lockb")) return "bun";
-  if (existsSync("yarn.lock")) return "yarn";
-  return "npm";
 }
