@@ -196,9 +196,20 @@ export function cn(...inputs: ClassValue[]) {
   // Install tailwind-merge
   try {
     console.log(chalk.cyan("Installing tailwind-merge..."));
-    execSync("npm install tailwind-merge", { stdio: "inherit" });
+    const packageManager = getPackageManager();
+    const installCommand = `${packageManager} ${
+      packageManager === "npm" ? "install" : "add"
+    } tailwind-merge`;
+    execSync(installCommand, { stdio: "inherit" });
     console.log(chalk.green.bold("Successfully installed tailwind-merge"));
   } catch (error) {
     console.error(chalk.red("Failed to install tailwind-merge:"), error);
   }
+}
+
+function getPackageManager(): string {
+  if (existsSync("pnpm-lock.yaml")) return "pnpm";
+  if (existsSync("bun.lockb")) return "bun";
+  if (existsSync("yarn.lock")) return "yarn";
+  return "npm";
 }

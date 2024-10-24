@@ -4,11 +4,13 @@ import chalk from "chalk";
 import spawn from "cross-spawn";
 import path from "path";
 
-type PackageManager = "npm" | "pnpm" | "yarn";
+type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
 
 function detectPackageManager(): PackageManager {
   if (existsSync("pnpm-lock.yaml")) {
     return "pnpm";
+  } else if (existsSync("bun.lockb")) {
+    return "bun";
   } else if (existsSync("yarn.lock")) {
     return "yarn";
   } else if (existsSync("package-lock.json")) {
@@ -26,7 +28,7 @@ export function installPackages(packages: string[]): Promise<void> {
     }
 
     const packageManager = detectPackageManager();
-    const installCommand = packageManager === "yarn" ? "add" : "install";
+    const installCommand = packageManager === "npm" ? "install" : "add";
     const args = [installCommand, ...packages];
     const spinner = ora(
       chalk.yellow(`Installing packages: ${packages.join(", ")}`)
