@@ -12,4 +12,16 @@ export const componentsData = [
       },
     ],
   },
+  {
+    command: "card",
+    packages: [],
+    files: [
+      {
+        step: 0,
+        name: "Card",
+        link: "https://raw.githubusercontent.com/Venu005/loomui/main/src/components/ui/Card.tsx",
+        type: ".tsx",
+      },
+    ],
+  },
 ];
