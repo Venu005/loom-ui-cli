@@ -1,6 +1,6 @@
 {
   "name": "@venusai/loom-ui",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Add components to your apps with CLI",
   "main": "index.js",
   "type": "module",
