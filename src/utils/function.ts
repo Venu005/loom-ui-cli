@@ -155,32 +155,30 @@ export function getWriteComponentPath(component: string) {
 }
 
 export async function setupLoomuiFolder() {
-  const srcPath = `./src/components/${UIFOLDER}`;
-  const rootPath = `./components/${UIFOLDER}`;
-  const libPath = path.join("src", "lib");
+  const libPath = path.join("lib");
   const utilsFilePath = path.join(libPath, "utils.ts");
 
-  // Create src/components or components directory
-  if (!existsSync("./src/components") && !existsSync("./components")) {
-    mkdirSync("./src/components", { recursive: true });
-    console.log(chalk.green.bold(`Created './src/components' directory`));
+  let basePath = existsSync("./src") ? "./src" : ".";
+
+  // Create components directory
+  const componentsPath = path.join(basePath, "components");
+  if (!existsSync(componentsPath)) {
+    mkdirSync(componentsPath, { recursive: true });
+    console.log(chalk.green.bold(`Created '${componentsPath}' directory`));
   }
 
   // Create loomui folder
-  if (!existsSync(srcPath) && !existsSync(rootPath)) {
-    if (existsSync("./src/components")) {
-      mkdirSync(srcPath, { recursive: true });
-      console.log(chalk.green.bold(`Created '${srcPath}' directory`));
-    } else {
-      mkdirSync(rootPath, { recursive: true });
-      console.log(chalk.green.bold(`Created '${rootPath}' directory`));
-    }
+  const loomuiPath = path.join(componentsPath, UIFOLDER);
+  if (!existsSync(loomuiPath)) {
+    mkdirSync(loomuiPath, { recursive: true });
+    console.log(chalk.green.bold(`Created '${loomuiPath}' directory`));
   }
 
   // Create lib directory and utils.ts file
-  if (!existsSync(libPath)) {
-    mkdirSync(libPath, { recursive: true });
-    console.log(chalk.green.bold(`Created '${libPath}' directory`));
+  const fullLibPath = path.join(basePath, libPath);
+  if (!existsSync(fullLibPath)) {
+    mkdirSync(fullLibPath, { recursive: true });
+    console.log(chalk.green.bold(`Created '${fullLibPath}' directory`));
   }
 
   const utilsContent = `import { type ClassValue, clsx } from "clsx"
@@ -191,15 +189,21 @@ export function cn(...inputs: ClassValue[]) {
 }
 `;
 
-  writeFileSync(utilsFilePath, utilsContent);
-  console.log(chalk.green.bold(`Created '${utilsFilePath}' file`));
+  const fullUtilsPath = path.join(basePath, utilsFilePath);
+  writeFileSync(fullUtilsPath, utilsContent);
+  console.log(chalk.green.bold(`Created '${fullUtilsPath}' file`));
 
-  // Install tailwind-merge
+  // Install tailwind-merge and clsx
   try {
-    console.log(chalk.cyan("Installing tailwind-merge..."));
-    await installPackages(["tailwind-merge"]);
-    console.log(chalk.green.bold("Successfully installed tailwind-merge"));
+    console.log(chalk.cyan("Installing tailwind-merge and clsx..."));
+    await installPackages(["tailwind-merge", "clsx"]);
+    console.log(
+      chalk.green.bold("Successfully installed tailwind-merge and clsx")
+    );
   } catch (error) {
-    console.error(chalk.red("Failed to install tailwind-merge:"), error);
+    console.error(
+      chalk.red("Failed to install tailwind-merge and clsx:"),
+      error
+    );
   }
 }
