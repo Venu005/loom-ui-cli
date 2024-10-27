@@ -145,20 +145,15 @@ export async function writeFilesWithLinks(payloads: Array<any>) {
 }
 
 export function getWriteComponentPath(component: string) {
-  const path = "./src";
-
-  if (existsSync(path)) {
-    return `./src/components/${UIFOLDER}/` + component + ".tsx";
-  } else {
-    return `./components/${UIFOLDER}/` + component + ".tsx";
-  }
+  const basePath = existsSync("src") ? "src" : ".";
+  return path.join(basePath, "components", UIFOLDER, `${component}.tsx`);
 }
 
 export async function setupLoomuiFolder() {
   const libPath = path.join("lib");
   const utilsFilePath = path.join(libPath, "utils.ts");
 
-  let basePath = existsSync("./src") ? "./src" : ".";
+  let basePath = existsSync("src") ? "src" : ".";
 
   // Create components directory
   const componentsPath = path.join(basePath, "components");
