@@ -150,7 +150,7 @@ export function getWriteComponentPath(component: string) {
 }
 
 export async function setupLoomuiFolder() {
-  const libPath = path.join("lib");
+  const libPath = "lib";
   const utilsFilePath = path.join(libPath, "utils.ts");
 
   let basePath = existsSync("src") ? "src" : ".";
