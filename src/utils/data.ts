@@ -14,7 +14,7 @@ export const componentsData = [
   },
   {
     command: "card",
-    packages: [],
+    packages: null,
     files: [
       {
         step: 0,
