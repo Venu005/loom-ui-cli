@@ -95,30 +95,36 @@ async function checkAndWriteFile(
     spinner.start();
   }
 
-  https
-    .get(url, (response) => {
-      let data = "";
+  return new Promise((resolve, reject) => {
+    https
+      .get(url, (response) => {
+        let data = "";
 
-      response.on("data", (chunk) => {
-        data += chunk;
-      });
-
-      response.on("end", () => {
-        writeFile(path, data, (err) => {
-          if (err) {
-            spinner.fail(chalk.red(`Fail to create ${action}`));
-          } else {
-            spinner.succeed(chalk.green(`File created ${name}.`));
-          }
+        response.on("data", (chunk) => {
+          data += chunk;
         });
+
+        response.on("end", () => {
+          writeFile(path, data, (err) => {
+            if (err) {
+              spinner.fail(chalk.red(`Fail to create ${action}`));
+              reject(err);
+            } else {
+              spinner.succeed(chalk.green(`File created ${name}.`));
+              resolve(true);
+            }
+          });
+        });
+      })
+      .on("error", (err) => {
+        console.error(chalk.red(`Fail to create ${action}`, err));
+        reject(err);
       });
-    })
-    .on("error", (err) => {
-      console.error(chalk.red(`Fail to create ${action}`, err));
-    });
+  });
 }
 
 export async function writeFilesWithLinks(payloads: Array<any>) {
+  console.log("Starting writeFilesWithLinks with payloads:", payloads);
   for (const payload of payloads) {
     const { step, name, link, type } = payload;
     const action = ` Creating ${name}${type}`;
@@ -126,7 +132,11 @@ export async function writeFilesWithLinks(payloads: Array<any>) {
 
     if (link) {
       const spinner = ora(chalk.cyan(action) as any).start();
-      await checkAndWriteFile(action, link, path, spinner, payload.name);
+      try {
+        await checkAndWriteFile(action, link, path, spinner, payload.name);
+      } catch (error) {
+        console.error(`Error processing ${name}:`, error);
+      }
     } else {
       const spinner = ora(chalk.cyan(action)).start();
       const filePath = await findTargetFile(payload.write.fileName);
